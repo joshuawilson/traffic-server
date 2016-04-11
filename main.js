@@ -25,9 +25,9 @@ server.route({
     method: 'POST',
     path: '/record',
     handler: (request, reply) => {
-        traffic.push(JSON.parse(request.payload));
+        traffic.push(request.payload);
         reply(`recorded ${request.payload}`);
-        console.log(`recorded ${request.payload}`);
+        // console.log(`recorded ${request.payload}`);
     },
 });
 server.start( err => {
