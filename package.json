@@ -1,0 +1,25 @@
+{
+  "name": "traffic-server",
+  "version": "1.0.0",
+  "description": "A service that consumes HTTP traffic data and replays it over WebSocket.",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Red-Hat-Middleware-Keynote/traffic-server.git"
+  },
+  "author": "Michael Clayton <mclayton@redhat.com>",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Red-Hat-Middleware-Keynote/traffic-server/issues"
+  },
+  "homepage": "https://github.com/Red-Hat-Middleware-Keynote/traffic-server#readme",
+  "dependencies": {
+    "hapi": "^13.3.0",
+    "lodash": "^4.10.0",
+    "ws": "^1.1.0"
+  }
+}
