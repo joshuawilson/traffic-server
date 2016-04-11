@@ -27,6 +27,7 @@ server.route({
     handler: (request, reply) => {
         traffic.push(JSON.parse(request.payload));
         reply(`recorded ${request.payload}`);
+        console.log(`recorded ${request.payload}`);
     },
 });
 server.start( err => {
@@ -48,7 +49,7 @@ var wss = new WebSocketServer({ port: config.WS_PORT });
 console.log(`WebSocket server running at ws://localhost:${config.WS_PORT}`);
 
 wss.on('connection', function connection(ws) {
-    ws.send('connected');
+    console.log('client connected');
 });
 
 wss.broadcast = function broadcast(data) {
@@ -59,6 +60,9 @@ wss.broadcast = function broadcast(data) {
 
 function push_traffic() {
     // broadcast traffic to websocket clients and empty the traffic list
+    if (traffic.length) {
+        console.log(`sending ${traffic.length} traffic events`);
+    }
     wss.broadcast( JSON.stringify( traffic.splice(0) ) );
 }
 
