@@ -1,5 +1,6 @@
 module.exports = {
-    HTTP_PORT: 3000,
-    WS_PORT: 3001,
-    WS_INTERVAL: 100, // ms
+    HTTP_PORT     : 3003,
+    WS_PORT       : 3004,
+    WS_INTERVAL   : 10, // ms
+    SPAM_INTERVAL : 30, // ms
 };

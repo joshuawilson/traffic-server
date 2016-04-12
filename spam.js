@@ -1,4 +1,8 @@
-const ids = [0, 1, 2, 3];
+var ids = [0, 1, 2, 3];
+
+const INTERNET_ID = 4;
+const ENTRY_POINT_ID = 0;
+const PUBLIC_PERCENTAGE = 0.2; // percentage of fake traffic that comes from public internet
 
 const config = require('./config');
 var http = require('http');
@@ -22,10 +26,32 @@ function start_spam() {
 }
 
 function random_traffic() {
+    // return either inter-microservice traffic or public internet traffic
+    var retval;
+
+    if (Math.random() > 0.2) {
+        retval = random_microservice_traffic();
+    }
+    else {
+        retval = public_traffic();
+    }
+
+    return retval;
+}
+
+function random_microservice_traffic() {
     ids.sort(shuffler);
+    return traffic( ids[0], ids[1] );
+}
+
+function public_traffic() {
+    return traffic( INTERNET_ID, ENTRY_POINT_ID );
+}
+
+function traffic(from, to) {
     return {
-        from : ids[0],
-        to   : ids[1],
+        from : from,
+        to   : to,
     };
 }
 
@@ -33,4 +59,4 @@ function shuffler() {
     return Math.round( Math.random() * 2 - 1 );
 }
 
-setInterval(start_spam, 5);
+setInterval(start_spam, config.SPAM_INTERVAL);
