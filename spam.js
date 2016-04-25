@@ -40,8 +40,9 @@ function random_traffic() {
 }
 
 function random_microservice_traffic() {
-    ids.sort(shuffler);
-    return traffic( ids[0], ids[1] );
+    // ids.sort(shuffler);
+    var id = Math.floor(Math.random() * ids.length);
+    return traffic( ids[id], ids[(id+1)%ids.length] );
 }
 
 function public_traffic() {
