@@ -1,7 +1,7 @@
-var ids = [0, 1, 2, 3];
+var ids = [1, 2, 3, 4, 5];
 
-const INTERNET_ID = 4;
-const ENTRY_POINT_ID = 0;
+const INTERNET_ID = 0;
+const ENTRY_POINT_ID = 1;
 const PUBLIC_PERCENTAGE = 0.2; // percentage of fake traffic that comes from public internet
 
 const config = require('./config');
