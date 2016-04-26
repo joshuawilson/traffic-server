@@ -1,6 +1,7 @@
 'use strict';
 
 const config = require('./config');
+require("console-stamp")(console);
 
 var traffic = [];
 
@@ -66,8 +67,8 @@ function push_traffic() {
     // broadcast traffic to websocket clients and empty the traffic list
     if (traffic.length) {
         console.log(`sending ${traffic.length} traffic events`);
+        wss.broadcast( JSON.stringify( traffic.splice(0) ) );
     }
-    wss.broadcast( JSON.stringify( traffic.splice(0) ) );
 }
 
 setInterval( push_traffic, config.WS_INTERVAL );

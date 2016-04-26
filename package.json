@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/Red-Hat-Middleware-Keynote/traffic-server#readme",
   "dependencies": {
+    "console-stamp": "^0.2.1",
+    "console-timestamp": "^0.3.0",
     "hapi": "^13.3.0",
     "lodash": "^4.10.0",
     "ws": "^1.1.0"
