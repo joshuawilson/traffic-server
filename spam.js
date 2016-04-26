@@ -6,6 +6,7 @@ const PUBLIC_PERCENTAGE = 0.2; // percentage of fake traffic that comes from pub
 
 const config = require('./config');
 var http = require('http');
+require("console-stamp")(console);
 
 function start_spam() {
     var payload = JSON.stringify(random_traffic());
@@ -23,6 +24,7 @@ function start_spam() {
     });
     post.write(payload);
     post.end();
+    console.log(`POST ${payload}`);
 }
 
 function random_traffic() {
