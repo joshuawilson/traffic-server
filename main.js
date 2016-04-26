@@ -12,48 +12,54 @@ var traffic = [];
 ////////////////////////////////////////////////////////////////////////
 
 const Hapi = require('hapi');
+const HapiWebSocket = require('hapi-plugin-websocket');
 const server = new Hapi.Server();
 
+var ws_server;
+
 server.connection({ port: config.HTTP_PORT });
-server.route({
-    method: 'GET',
-    path: '/pending',
-    handler: (request, reply) => {
-        reply(traffic);
-    },
+server.register(HapiWebSocket, () => {
+    server.route({
+        method: 'GET',
+        path: '/pending',
+        handler: (request, reply) => {
+            reply(traffic);
+        },
+    });
+    server.route({
+        method: 'POST',
+        path: '/record',
+        handler: (request, reply) => {
+            traffic.push(request.payload);
+            reply(`recorded ${request.payload}`);
+        },
+    });
+    server.route({
+        method: "POST",
+        path: "/stream",
+        config: {
+            plugins: {
+                websocket: {
+                    only: true,
+                    connect: (wss, ws) => {
+                        ws_server = wss;
+                    },
+                    disconnect: (wss, ws) => {
+                    }
+                }
+            }
+        },
+        handler: (request, reply) => {},
+    });
+    server.start( err => {
+        if (err) {
+            throw err;
+        }
+        console.log(`REST server running at ${server.info.uri}`);
+    });
 });
-server.route({
-    method: 'POST',
-    path: '/record',
-    handler: (request, reply) => {
-        traffic.push(request.payload);
-        reply(`recorded ${request.payload}`);
-        // console.log(`recorded ${request.payload}`);
-    },
-});
-server.start( err => {
-    if (err) {
-        throw err;
-    }
-    console.log(`REST server running at ${server.info.uri}`);
-});
 
-////////////////////////////////////////////////////////////////////////
-//                                                                    //
-//                      Set up WebSocket service                      //
-//                                                                    //
-////////////////////////////////////////////////////////////////////////
-
-var WebSocketServer = require('ws').Server;
-var wss = new WebSocketServer({ port: config.WS_PORT });
-
-console.log(`WebSocket server running at ws://localhost:${config.WS_PORT}`);
-
-wss.on('connection', function connection(ws) {
-    console.log('client connected');
-});
-
-wss.broadcast = function broadcast(data) {
+function broadcast(wss, data) {
     wss.clients.forEach(function each(client) {
         try {
             client.send(data);
@@ -65,9 +71,9 @@ wss.broadcast = function broadcast(data) {
 
 function push_traffic() {
     // broadcast traffic to websocket clients and empty the traffic list
-    if (traffic.length) {
-        console.log(`sending ${traffic.length} traffic events`);
-        wss.broadcast( JSON.stringify( traffic.splice(0) ) );
+    if (ws_server && traffic.length) {
+        console.log(`Relayed ${traffic.length} traffic events`);
+        broadcast( ws_server, JSON.stringify( traffic.splice(0) ) );
     }
 }
 
