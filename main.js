@@ -42,6 +42,7 @@ server.register(HapiWebSocket, () => {
                 websocket: {
                     only: true,
                     connect: (wss, ws) => {
+                        console.log("client connected");
                         ws_server = wss;
                     },
                     disconnect: (wss, ws) => {

@@ -1,4 +1,5 @@
-var ids = [1, 2, 3, 4, 5];
+
+var ids = ['0-1', '3-1', '3-2'];
 
 const INTERNET_ID = 0;
 const ENTRY_POINT_ID = 1;
@@ -12,6 +13,7 @@ function start_spam() {
     var payload = JSON.stringify(random_traffic());
     var post = http.request({
         host: 'localhost',
+        // host: 'traffic-server-demo.apps.demo.aws.paas.ninja',
         port: config.HTTP_PORT,
         path: '/record',
         method: 'POST',
@@ -28,23 +30,13 @@ function start_spam() {
 }
 
 function random_traffic() {
-    // return either inter-microservice traffic or public internet traffic
-    var retval;
-
-    if (Math.random() > 0.2) {
-        retval = random_microservice_traffic();
-    }
-    else {
-        retval = public_traffic();
-    }
-
-    return retval;
+    return random_microservice_traffic();
 }
 
 function random_microservice_traffic() {
     // ids.sort(shuffler);
-    var id = Math.floor(Math.random() * ids.length);
-    return traffic( ids[id], ids[(id+1)%ids.length] );
+    var id = Math.floor(Math.random() * (ids.length - 1));
+    return traffic( ids[id], ids[id+1] );
 }
 
 function public_traffic() {
